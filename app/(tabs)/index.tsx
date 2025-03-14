@@ -1,74 +1,79 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
+interface Car {
+  brand: string;
+  model: string;
+  year: number;
+  color: string;
+  imageUrl: string;
 }
 
+const cars: Car[] = [
+  {
+    brand: "VW",
+    model: "Jetta",
+    year: 2018,
+    color: "Branco",
+    imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgOMa968-JMNbsU17aAAdoUI0SBXx7HfTpRGMLZ6Z-WrDVmVBwc5G1k2KI7ceA7EMRjJF7Ml23qx3qUqcRdVl26AUrCDN1EicOk1dVcXXkAX8QuzIZQj1lrmKB_PmMmtqJvR1VmLtevuyyF/s1600/Volkswagen-Golf-Sedan-Lamando+(7).jpg", // Substitua pelo URL correto
+  },
+  {
+    brand: "Ford",
+    model: "Maverick",
+    year: 1979,
+    color: "azul",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/8b/1972-ford-maverick-moore.jpg", // Substitua pelo URL correto
+  },
+];
+
+const CarCard: React.FC<{ car: Car }> = ({ car }) => (
+  <View style={styles.card}>
+    <Image source={{ uri: car.imageUrl }} style={styles.image} />
+    <Text style={styles.title}>{`${car.brand} - ${car.model}`}</Text>
+    <Text>{`Ano: ${car.year}`}</Text>
+    <Text>{`Cor: ${car.color}`}</Text>
+  </View>
+);
+
+const CarList: React.FC = () => {
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={cars}
+        keyExtractor={(item) => item.model}
+        renderItem={({ item }) => <CarCard car={item} />}
+      />
+    </View>
+  );
+};
+
+export default CarList;
+
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#f5f5f5',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  card: {
+    backgroundColor: '#fff',
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  image: {
+    width: '100%',
+    height: 150,
+    borderRadius: 8,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginVertical: 5,
   },
 });
